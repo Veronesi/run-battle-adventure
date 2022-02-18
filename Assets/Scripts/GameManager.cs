@@ -15,11 +15,7 @@ public class GameManager : MonoBehaviour
     private float maxEnergy = 10f;
     private void Start()
     {
-        int[] championsSelected = playerData.ChampionsSelected;
-        for(int i = 0; i < championsSelected.Length; i++)
-        {
-            cards[i] = Instantiate(dictionaryCard[championsSelected[i]], table.transform.GetChild(i).transform);
-        }
+
     }
 
     private void Awake()
@@ -30,6 +26,24 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         ChargeEnergy();
+    }
+
+    public void StartGame()
+    {
+        StartSpawnEnemies();
+        int[] championsSelected = playerData.ChampionsSelected;
+        for(int i = 0; i < championsSelected.Length; i++)
+        {
+            cards[i] = Instantiate(dictionaryCard[championsSelected[i]], table.transform.GetChild(i).transform);
+        }
+    }
+
+    public void StartSpawnEnemies()
+    {
+        GameObject enemy1 = Instantiate(dictionaryCard[0].transform.GetComponentInChildren<DragableCard>().champion, new Vector3(6f, 0f, 10f), Quaternion.identity);
+        GameObject enemy2 = Instantiate(dictionaryCard[2].transform.GetComponentInChildren<DragableCard>().champion, new Vector3(8f, 0f, 10f), Quaternion.identity);
+        enemy1.tag = "Enemy";
+        enemy2.tag = "Enemy";
     }
 
     public void AnimationChampionArea(bool active)
@@ -52,7 +66,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static PlayerData playerData
+    public PlayerData playerData
     {
         get
         {
@@ -67,5 +81,5 @@ public class GameManager : MonoBehaviour
             _playerData = value;
         }
     }
-    private static PlayerData _playerData;
+    private PlayerData _playerData;
 }
