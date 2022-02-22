@@ -11,13 +11,16 @@ public class GameManager : MonoBehaviour
     public GameObject[] dictionaryCard;
     public Animator animatorChampionArea;
     public SpriteRenderer championArea;
+    public GameObject championSelectMenu;
     public float energy = 0f;
     private float maxEnergy = 10f;
-    private void Start()
+    public bool isGameStart;
+
+    public void Start()
     {
-
+        Instantiate(championSelectMenu, Vector3.zero, Quaternion.identity);
+        isGameStart = false;
     }
-
     private void Awake()
     {
         instance = this;
@@ -30,18 +33,24 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        isGameStart = true;
         StartSpawnEnemies();
-        int[] championsSelected = playerData.ChampionsSelected;
+        IChampion[] championsSelected = playerData.ChampionsSelected;
         for(int i = 0; i < championsSelected.Length; i++)
         {
-            cards[i] = Instantiate(dictionaryCard[championsSelected[i]], table.transform.GetChild(i).transform);
+            if(championsSelected[i] != null)
+            {
+                cards[i] = Instantiate(championsSelected[i].cardObject, table.transform.GetChild(i).transform);
+            }
         }
     }
 
     public void StartSpawnEnemies()
     {
-        GameObject enemy1 = Instantiate(dictionaryCard[0].transform.GetComponentInChildren<DragableCard>().champion, new Vector3(6f, 0f, 10f), Quaternion.identity);
-        GameObject enemy2 = Instantiate(dictionaryCard[2].transform.GetComponentInChildren<DragableCard>().champion, new Vector3(8f, 0f, 10f), Quaternion.identity);
+        IChampion ogre = new OgreBlue();
+        IChampion oldTree = new OldTree();
+        GameObject enemy1 = Instantiate(ogre.championObject, new Vector3(6f, 0f, 10f), Quaternion.identity);
+        GameObject enemy2 = Instantiate(oldTree.championObject, new Vector3(8f, 0f, 10f), Quaternion.identity);
         enemy1.tag = "Enemy";
         enemy2.tag = "Enemy";
     }
@@ -59,11 +68,18 @@ public class GameManager : MonoBehaviour
 
     public void ChargeEnergy()
     {
-        if(energy < maxEnergy)
+        if (!isGameStart)
         {
-            energyBar.size = new Vector2(4.8f * energy / maxEnergy, energyBar.size.y);
-            energy += Time.deltaTime / 2;
+            return;
         }
+
+        if(energy > maxEnergy)
+        {
+            return;
+        }
+
+        energyBar.size = new Vector2(4.8f * energy / maxEnergy, energyBar.size.y);
+        energy += Time.deltaTime / 2;
     }
 
     public PlayerData playerData

@@ -8,6 +8,8 @@ public class Champion : MonoBehaviour
     public float life = 10f;
     public float maxLife = 10f;
     public int energy = 1;
+    public float attack = 1f;
+    public float attackSpeed = 1f;
     public GameObject hitIndicator;
 
     private void Start()

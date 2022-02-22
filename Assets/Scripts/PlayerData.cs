@@ -26,6 +26,7 @@ public class PlayerData
         get { return PlayerPrefs.GetFloat(money); }
         set { PlayerPrefs.SetFloat(money, value); }
     }
+    /*
     public int[] ChampionsSelected2()
     {
         int[] req = new int[4];
@@ -35,23 +36,37 @@ public class PlayerData
         req[3] = PlayerPrefs.GetInt("championSelected3");
         return req;
     }
+    */
 
     public const string championsSelected = "ChampionsSelected";
-    public int[] ChampionsSelected
+    public IChampion[] ChampionsSelected
     {
         get
         {
-            int[] req = new int[4];
-            req[0] = PlayerPrefs.GetInt("championSelected0");
-            req[1] = PlayerPrefs.GetInt("championSelected1");
-            req[2] = PlayerPrefs.GetInt("championSelected2");
-            req[3] = PlayerPrefs.GetInt("championSelected3");
+            IChampion[] req = new IChampion[4];
+            req[0] = ChampionManager.getChampionById(PlayerPrefs.GetInt($"{championsSelected}0"));
+            req[1] = ChampionManager.getChampionById(PlayerPrefs.GetInt($"{championsSelected}1"));
+            req[2] = ChampionManager.getChampionById(PlayerPrefs.GetInt($"{championsSelected}2"));
+            req[3] = ChampionManager.getChampionById(PlayerPrefs.GetInt($"{championsSelected}3"));
             return req;
         }
     }
     public void SetChampionSelected(int position, int champion)
     {
-        PlayerPrefs.SetInt("championSelected" + position, champion);
+        PlayerPrefs.SetInt(championsSelected + position, champion);
     }
 
+    public const string championsUnlock = "ChampionsUnlock";
+    public int[] ChampionsUnlock
+    {
+        get
+        {
+            int[] req = new int[4];
+            req[0] = 0;
+            req[1] = PlayerPrefs.GetInt($"{championsUnlock}1");
+            req[2] = PlayerPrefs.GetInt($"{championsUnlock}2");
+            req[3] = PlayerPrefs.GetInt($"{championsUnlock}3");
+            return req;
+        }
+    }
 }
